@@ -1,0 +1,54 @@
+{
+  "dir_client": {
+    "etcd_addr": "",
+    "etcd_port": 2379
+    /*"verbose": true*/
+  },
+
+  "alloc": {
+    "num_pages_to_free": [1024]
+    /*"verbose": true*/
+  },
+
+  "network": {
+    "lcores": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    /*"lcores": [0, 1, 2, 3, 4, 5, 6, 7, 8],*/
+    /*"lcores": [0, 1, 2],*/
+
+    "ports": [
+      {"port_id": 0, "mac_addr": "", "ipv4_addr": ""}
+      /*{"port_id": 1, "ipv4_addr": "10.0.1.2"},
+      {"port_id": 2, "ipv4_addr": "10.0.1.3"},
+      {"port_id": 3, "ipv4_addr": "10.0.1.4"},
+      {"port_id": 4, "ipv4_addr": "10.0.1.5"},
+      {"port_id": 5, "ipv4_addr": "10.0.1.6"},
+      {"port_id": 6, "ipv4_addr": "10.0.1.7"},
+      {"port_id": 7, "ipv4_addr": "10.0.1.8"}*/
+    ],
+
+    "endpoints": [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [5, 0],
+      [6, 0],
+      [7, 0],
+      [8, 0],
+      [9, 0],
+      [10, 0],
+      [11, 0]
+
+      /*[0,0]*/
+
+    ],
+
+    /*"dpdk_args": ["-n", "4", "--socket-mem=2048,2048"]*/
+    "dpdk_args": ["-n", "4", "-a", "0000:01:00.0", "--socket-mem=1024", "v"]
+  },
+
+  "client": {},
+
+  "get_ratio": 1.00
+}

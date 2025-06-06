@@ -1,0 +1,54 @@
+diff --git a/herd/client.c b/herd/client.c
+--- a/herd/client.c
++++ b/herd/client.c
+@@ -112,6 +112,10 @@ void* run_client(void* arg) {
+   int wn = 0;                 /* Worker number */
+ 
+   struct timespec start, end;
++  struct timespec op_start[WINDOW_SIZE], op_end[WINDOW_SIZE];	// Latency timers
++  double latency_us, batch_latency_us, tot_latency_us = 0, tot_batch_latency_us = 0;
++  int slot = WINDOW_SIZE - 1;
++  int tot_latency_requests_per_K_512 = 0; // K_512 / WINDOW_SIZE;
+   clock_gettime(CLOCK_REALTIME, &start);
+ 
+   /* Fill the RECV queue */
+@@ -128,6 +132,17 @@ void* run_client(void* arg) {
+       printf("main: Client %d: %.2f IOPS. nb_tx = %lld\n", clt_gid,
+              K_512 / seconds, nb_tx);
+ 
++      if (clt_gid == 0) {
++	      printf("main: Client %d: Total average latency = %.3f\n", clt_gid, tot_latency_us / tot_latency_requests_per_K_512);
++	      printf("main: Client %d: Total batch average latency = %.3f\n", clt_gid, tot_batch_latency_us / tot_latency_requests_per_K_512);
++
++	      tot_latency_us = 0;
++	      tot_batch_latency_us = 0;
++	      tot_latency_requests_per_K_512 = 0;
++      }
++
+       rolling_iter = 0;
+ 
+       clock_gettime(CLOCK_REALTIME, &start);
+@@ -151,11 +166,26 @@ void* run_client(void* arg) {
+ 
+     if (nb_tx % WINDOW_SIZE == 0 && nb_tx > 0) {
+       hrd_poll_cq(cb->dgram_recv_cq[0], WINDOW_SIZE, wc);
++      if (clt_gid == 0) {
++	      clock_gettime(CLOCK_REALTIME, &op_end[slot]);
++	      tot_latency_requests_per_K_512++;
++	      latency_us = (op_end[slot].tv_sec - op_start[slot].tv_sec) * 1000000
++		      + (op_end[slot].tv_nsec - op_start[slot].tv_nsec) * 0.001;
++	      tot_latency_us += latency_us;
++	      batch_latency_us = (op_end[slot].tv_sec - op_start[0].tv_sec) * 1000000
++                      + (op_end[slot].tv_nsec - op_start[0].tv_nsec) * 0.001;
++	      tot_batch_latency_us += batch_latency_us;
++      }
+     }
+ 
+     wn = hrd_fastrand(&seed) % NUM_WORKERS; /* Choose a worker */
+     int is_update = (hrd_fastrand(&seed) % 100 < update_percentage) ? 1 : 0;
+ 
++    clock_gettime(CLOCK_REALTIME, &op_start[nb_tx % WINDOW_SIZE]);
++
+     /* Forge the HERD request */
+     key_i = hrd_fastrand(&seed) % HERD_NUM_KEYS; /* Choose a key */
+ 
