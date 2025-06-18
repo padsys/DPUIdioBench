@@ -1,4 +1,7 @@
+<img width="1185" alt="Screenshot 2025-06-17 at 11 09 33 PM" src="https://github.com/user-attachments/assets/bce08497-00eb-46f1-abe8-76b429b149b8" />
+
 # DPUIdioBench
+
 An Open-Source Benchmark Suite for Understanding the Idiosyncrasies of Emerging BlueField DPUs. This repository contains the code for our ICS'25 paper, "Arjun Kashyap, Yuke Li, Darren Ng, and Xiaoyi Lu. Understanding the Idiosyncrasies of Emerging BlueField DPUs".
 
 Each folder represents experiments to test different aspects of DPU. The directory layout is as follows:
