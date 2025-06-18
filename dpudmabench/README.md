@@ -23,7 +23,7 @@ dpu> dpudmabench/bf2/dpu/dpu_dma_write_d_to_h_lat -p 03:00.0 -d desc.txt -b buf.
 ```
 Note that the PCIe addresses might be different on different machines.
 
-Similarly, throughput can be computed for various types of DMA operations. The suffix “thr” and “thr_event” represent the throughput of polling and event-based DMA operations, respectively. For BF-3, we are cleaning the throughput code for event-based DMAs and will update it soon.
+Similarly, throughput can be computed for various types of DMA operations. The suffix “thr” and “thr_event” represent the throughput of polling and event-based DMA operations, respectively.
 
 For Figure 6a, the core utilization on the host and DPU is measured by the Linux perf utility.
 
